@@ -1,5 +1,5 @@
 {
-  "projectName": "Detta är Projekt 1",
-  "fullText": "Här kan du skriva mycket mer text om just detta projekt.",
-  "mainImage": "bild.png"
+  "projectName": "Mitt Galleri - Projekt 2",
+  "fullText": "Här är en djupgående beskrivning av projekt 2 och alla dess bilder.",
+  "images": ["bild1.png", "bild2.png", "bild3.png"]
 }

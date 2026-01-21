@@ -2,31 +2,78 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <title>Min Portfolio</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 40px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-decoration: none; color: #333; transition: 0.2s; }
-        .card:hover { transform: translateY(-5px); }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Min Projektportfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Mina Projekt</h1>
-    <div id="project-grid" class="grid"></div>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+
+    <header class="bg-white border-b border-gray-200 py-8 mb-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h1 class="text-5xl font-extrabold tracking-tight text-gray-900 mb-2">
+                Mina Projekt
+            </h1>
+            <p class="text-gray-500 text-lg">En samling av mina senaste arbeten och experiment.</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 pb-20">
+        <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="col-span-full text-center py-20 text-gray-400">
+                Laddar projekt...
+            </div>
+        </div>
+    </main>
 
     <script>
-        fetch('projects.json')
-            .then(res => res.json())
-            .then(data => {
+        // Hämtar registret (din huvud-JSON)
+        async function fetchProjects() {
+            try {
+                const response = await fetch('projects.json');
+                const projects = await response.json();
+                
                 const grid = document.getElementById('project-grid');
-                data.forEach(p => {
+                grid.innerHTML = ''; // Rensa "laddar"-texten
+
+                projects.forEach(p => {
                     grid.innerHTML += `
-                        <a href="project-view.html?id=${p.id}" class="card">
-                            <h3>${p.title}</h3>
-                            <p>${p.description}</p>
-                        </a>`;
+                        <a href="project-view.html?id=${p.id}" 
+                           class="group bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            
+                            <div class="aspect-video bg-gray-100 flex items-center justify-center overflow-hidden">
+                                <img src="content/${p.id}/thumbnail.png" 
+                                     alt="${p.title}" 
+                                     class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                                     onerror="this.src='https://via.placeholder.com/400x225?text=Ingen+bild'">
+                            </div>
+
+                            <div class="p-6">
+                                <h2 class="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors">
+                                    ${p.title}
+                                </h2>
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    ${p.description}
+                                </p>
+                                <div class="mt-4 flex items-center text-blue-600 font-semibold text-sm">
+                                    Visa projekt 
+                                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+                    `;
                 });
-            });
+            } catch (err) {
+                document.getElementById('project-grid').innerHTML = `
+                    <div class="col-span-full text-red-500 text-center">
+                        Kunde inte ladda projects.json. Se till att filen finns i rotmappen.
+                    </div>
+                `;
+            }
+        }
+
+        fetchProjects();
     </script>
 </body>
 </html>
